@@ -1,6 +1,5 @@
 ﻿using MagicOnionChat.Backend.Abstractions;
 using MagicOnionChat.Backend.BackgroundServices;
-using MagicOnionChat.Backend.ExceptionHandlers;
 using MagicOnionChat.Backend.Repositories;
 
 namespace MagicOnionChat.Backend.Extensions;
@@ -9,8 +8,6 @@ public static class DependencyInjectionExtension
 {
     public static IServiceCollection AddAppDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddExceptionHandler<GlobalExceptionHandler>();
-
         return services
             .AddInfrastructure(configuration)
             .AddChatFeatures();
@@ -32,7 +29,8 @@ public static class DependencyInjectionExtension
 
     private static IServiceCollection AddChatFeatures(this IServiceCollection services)
     {
-        services.AddSingleton<IChatContextRepository, ChatContextRepository>();
+        services.AddSingleton<IChatContextFactory, ChatContextFactory>();
+        services.AddSingleton<IChatCommandProcessor, ChatCommandProcessor>();
 
         services.AddHostedService<ChatGameLoopService>();
         services.AddHostedService<ChatNotificationService>();

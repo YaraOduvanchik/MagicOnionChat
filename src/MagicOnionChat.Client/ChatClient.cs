@@ -7,84 +7,108 @@ namespace MagicOnionChat.Client;
 public class ChatClient
 {
     private readonly string _serverUrl;
+    private readonly ConsoleUI _ui;
     private GrpcChannel? _channel;
     private IChatHub? _hub;
     private string _userName = string.Empty;
 
-    public ChatClient(string serverUrl)
+    public ChatClient(string serverUrl, ConsoleUI ui)
     {
         _serverUrl = serverUrl;
+        _ui = ui;
     }
 
     public async ValueTask RunAsync()
     {
-        Console.Write("Введите ваше имя: ");
-        _userName = Console.ReadLine()?.Trim();
-        if (string.IsNullOrWhiteSpace(_userName))
-            _userName = "Anonymous";
-
-        var httpHandler = new HttpClientHandler
-        {
-            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-        };
-
-        _channel = GrpcChannel.ForAddress(_serverUrl, new GrpcChannelOptions
-        {
-            HttpHandler = httpHandler
-        });
+        _userName = await _ui.ReadUserNameAsync();
 
         try
         {
-            _hub = await StreamingHubClient.ConnectAsync<IChatHub, IChatReceiver>(
-                _channel,
-                new ChatClientReceiver());
-
-            Console.WriteLine($"\nПодключены как: {_userName}\n");
-
+            _channel = CreateGrpcChannel();
+            _hub = await ConnectToHubAsync();
+            
+            UpdateConsoleTitle();
+            await _ui.PrintWelcomeAsync(_userName);
+            
             await _hub.JoinAsync(_userName);
-
             await MessageLoopAsync();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ошибка подключения: {ex.Message}");
+           await _ui.PrintErrorAsync(ex.Message);
         }
         finally
         {
-            if (_hub != null)
-                await _hub.DisposeAsync();
-            
-            if (_channel != null)
-                _channel.Dispose();
+            await CleanupAsync();
         }
+    }
+
+    private GrpcChannel CreateGrpcChannel()
+    {
+        var httpHandler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+
+        return GrpcChannel.ForAddress(_serverUrl, new GrpcChannelOptions
+        {
+            HttpHandler = httpHandler,
+            MaxReceiveMessageSize = null
+        });
+    }
+
+    private async ValueTask<IChatHub> ConnectToHubAsync()
+    {
+        return await StreamingHubClient.ConnectAsync<IChatHub, IChatReceiver>(
+            _channel!,
+            new ChatClientReceiver(_ui));
+    }
+
+    private void UpdateConsoleTitle()
+    {
+        Console.Title = $"MagicOnion Chat - {_userName}";
     }
 
     private async ValueTask MessageLoopAsync()
     {
-        Console.WriteLine("Введите сообщение (или 'exit' для выхода):\n");
-
         while (true)
         {
-            Console.Write("> ");
-            var message = Console.ReadLine();
+            var message = await _ui.ReadMessageAsync();
 
-            if (string.Equals(message, "exit", StringComparison.OrdinalIgnoreCase))
+            if (IsExitCommand(message))
             {
-                Console.WriteLine("Выход из чата...");
+                await _ui.PrintExitAsync();
                 break;
             }
 
             if (string.IsNullOrWhiteSpace(message))
                 continue;
 
-            try
-            {
-                await _hub!.SendAsync(message.Trim());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка отправки: {ex.Message}");
-            }
+            await SendMessageAsync(message.Trim());
         }
+    }
+
+    private static bool IsExitCommand(string? input) =>
+        string.Equals(input, "exit", StringComparison.OrdinalIgnoreCase);
+
+    private async ValueTask SendMessageAsync(string message)
+    {
+        try
+        {
+            await _hub!.SendAsync(message);
+        }
+        catch (Exception ex)
+        {
+            await _ui.PrintErrorAsync($"Ошибка отправки: {ex.Message}");
+        }
+    }
+
+    private async ValueTask CleanupAsync()
+    {
+        if (_hub != null)
+            await _hub.DisposeAsync();
+
+        _channel?.Dispose();
     }
 }

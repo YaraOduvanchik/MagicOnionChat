@@ -1,14 +1,11 @@
 ﻿using MagicOnionChat.Client;
 
-Console.WriteLine("=== MagicOnion Chat Client ===");
-Console.WriteLine("Подключение к серверу...\n");
+var ui = new ConsoleUI();
 
-var serverPort = args.Length > 0 ? args[0] : "8081";
+await ui.PrintHeaderAsync();
 
-var serverUrl = $"http://localhost:{serverPort}";
-Console.WriteLine($"Используем адрес: {serverUrl}");
-
-var client = new ChatClient(serverUrl);
+var serverUrl = $"http://localhost:{GetServerPort()}";
+var client = new ChatClient(serverUrl, ui);
 
 try
 {
@@ -16,5 +13,11 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"Ошибка: {ex.Message}");
+    await ui.PrintErrorAsync($"Критическая ошибка: {ex.Message}");
 }
+finally
+{
+    await ui.PrintGoodbyeAsync();
+}
+
+static string GetServerPort() => Environment.GetEnvironmentVariable("CHAT_PORT") ?? "8081";

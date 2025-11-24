@@ -2,16 +2,10 @@ using MagicOnionChat.Backend.Abstractions;
 
 namespace MagicOnionChat.Client;
 
-public class ChatClientReceiver : IChatReceiver
+public class ChatClientReceiver(ConsoleUI ui) : IChatReceiver
 {
-    public void OnReceiveMessage(string message)
+    public async void OnReceiveMessage(string message)
     {
-        if (message.StartsWith("[SERVER]:"))
-            Console.ForegroundColor = ConsoleColor.Yellow;
-        else
-            Console.ForegroundColor = ConsoleColor.Green;
-
-        Console.WriteLine(message);
-        Console.ResetColor();
+        await ui.PrintMessageAsync(message);
     }
 }

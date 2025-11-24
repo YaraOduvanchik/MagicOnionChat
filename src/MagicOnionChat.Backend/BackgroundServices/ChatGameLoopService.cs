@@ -2,7 +2,7 @@
 
 namespace MagicOnionChat.Backend.BackgroundServices;
 
-public class ChatGameLoopService(IChatContextRepository chatRepository) : BackgroundService
+public class ChatGameLoopService(IChatCommandProcessor commandProcessor) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -10,7 +10,7 @@ public class ChatGameLoopService(IChatContextRepository chatRepository) : Backgr
 
         do
         {
-            chatRepository.ProcessPendingCommands();
+            commandProcessor.ProcessPendingCommands();
         } while (await timer.WaitForNextTickAsync(stoppingToken));
     }
 }
