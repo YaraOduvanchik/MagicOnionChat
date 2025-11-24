@@ -1,7 +1,7 @@
-﻿using MagicOnionChat.Backend.BackgroundServices;
+﻿using MagicOnionChat.Backend.Abstractions;
+using MagicOnionChat.Backend.BackgroundServices;
 using MagicOnionChat.Backend.ExceptionHandlers;
 using MagicOnionChat.Backend.Repositories;
-using StackExchange.Redis;
 
 namespace MagicOnionChat.Backend.Extensions;
 
@@ -10,40 +10,33 @@ public static class DependencyInjectionExtension
     public static IServiceCollection AddAppDependencies(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddExceptionHandler<GlobalExceptionHandler>();
-        
+
         return services
             .AddInfrastructure(configuration)
-            .AddChatFeature();
+            .AddChatFeatures();
     }
 
     private static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddGrpc();
 
-        services.AddSingleton<ConnectionMultiplexer>(_ => 
-            ConnectionMultiplexer.Connect(
-                configuration.GetConnectionString("Redis")
-                ?? throw new InvalidOperationException("Redis not found")));
-
         services.AddMagicOnion()
             .UseRedisGroup(options =>
             {
-                var multiplexer = services.BuildServiceProvider()
-                    .GetRequiredService<ConnectionMultiplexer>();
-
-                options.ConnectionMultiplexer = multiplexer;
+                options.ConnectionString = configuration.GetConnectionString("Redis")
+                    ?? throw new InvalidOperationException("Redis not found");
             }, registerAsDefault: true);
 
         return services;
     }
 
-    private static IServiceCollection AddChatFeature(this IServiceCollection services)
+    private static IServiceCollection AddChatFeatures(this IServiceCollection services)
     {
-        services.AddSingleton<ChatContextRepository>();
-        
+        services.AddSingleton<IChatContextRepository, ChatContextRepository>();
+
         services.AddHostedService<ChatGameLoopService>();
         services.AddHostedService<ChatNotificationService>();
-        
+
         return services;
     }
 }
