@@ -1,6 +1,6 @@
 ﻿using MagicOnion;
 
-namespace MagicOnionChat.Backend.Infrastructure.Abstractions;
+namespace MagicOnionChat.Backend.Abstractions;
 
 public interface IChatHub : IStreamingHub<IChatHub, IChatReceiver>
 {

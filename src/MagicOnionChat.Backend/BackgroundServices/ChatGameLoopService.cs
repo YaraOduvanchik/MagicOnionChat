@@ -1,6 +1,6 @@
-﻿using MagicOnionChat.Backend.Infrastructure.Chat;
+﻿using MagicOnionChat.Backend.Repositories;
 
-namespace MagicOnionChat.Backend.Infrastructure;
+namespace MagicOnionChat.Backend.BackgroundServices;
 
 public class ChatGameLoopService(ChatContextRepository chatRepo) : BackgroundService
 {
@@ -8,7 +8,7 @@ public class ChatGameLoopService(ChatContextRepository chatRepo) : BackgroundSer
     {
         var chatContext = chatRepo.Chat;
 
-        var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(100));
 
         do
         {
