@@ -1,6 +1,6 @@
 ﻿using Grpc.Net.Client;
 using MagicOnion.Client;
-using MagicOnionChat.Backend.Abstractions;
+using MagicOnionChat.Contracts;
 
 namespace MagicOnionChat.Client;
 

@@ -1,6 +1,7 @@
 using System;
 using MagicOnionChat.Backend.Abstractions;
 using MagicOnionChat.Backend.Core;
+using MagicOnionChat.Contracts;
 
 namespace MagicOnionChat.Backend.Repositories;
 

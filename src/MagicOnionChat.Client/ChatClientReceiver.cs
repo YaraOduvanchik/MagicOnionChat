@@ -1,4 +1,4 @@
-using MagicOnionChat.Backend.Abstractions;
+using MagicOnionChat.Contracts;
 
 namespace MagicOnionChat.Client;
 

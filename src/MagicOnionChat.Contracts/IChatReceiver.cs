@@ -1,4 +1,4 @@
-﻿namespace MagicOnionChat.Backend.Abstractions;
+﻿namespace MagicOnionChat.Contracts;
 
 public interface IChatReceiver
 {

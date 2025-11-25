@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using Cysharp.Runtime.Multicast;
 using MagicOnionChat.Backend.Abstractions;
+using MagicOnionChat.Contracts;
 
 namespace MagicOnionChat.Backend.Core;
 

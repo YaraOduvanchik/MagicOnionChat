@@ -1,5 +1,6 @@
 ﻿using MagicOnion.Server.Hubs;
 using MagicOnionChat.Backend.Abstractions;
+using MagicOnionChat.Contracts;
 
 namespace MagicOnionChat.Backend.Core;
 

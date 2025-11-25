@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MagicOnionChat.Backend\MagicOnionChat.Backend.csproj" />
+      <ProjectReference Include="..\MagicOnionChat.Contracts\MagicOnionChat.Contracts.csproj" />
     </ItemGroup>
 
 </Project>

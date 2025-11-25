@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicOnionChat.Backend", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicOnionChat.Client", "src\MagicOnionChat.Client\MagicOnionChat.Client.csproj", "{07DF9FC8-0C99-4807-9163-EDF3CE70977D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicOnionChat.Contracts", "src\MagicOnionChat.Contracts\MagicOnionChat.Contracts.csproj", "{52C45EDE-2955-4F4C-8035-49E9A69946B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{07DF9FC8-0C99-4807-9163-EDF3CE70977D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07DF9FC8-0C99-4807-9163-EDF3CE70977D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07DF9FC8-0C99-4807-9163-EDF3CE70977D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52C45EDE-2955-4F4C-8035-49E9A69946B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52C45EDE-2955-4F4C-8035-49E9A69946B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52C45EDE-2955-4F4C-8035-49E9A69946B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52C45EDE-2955-4F4C-8035-49E9A69946B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -20,4 +20,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\MagicOnionChat.Contracts\MagicOnionChat.Contracts.csproj" />
+    </ItemGroup>
+
 </Project>
