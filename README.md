@@ -48,6 +48,7 @@
 **Что принято полностью:**
 - Архитектура Hub-Context Pattern
 - Примеры запуска Hub клиента
+- Консольный клиент
 
 **Что менялось вручную:**
 - Смена Kestrel listening с ListenLocalhost на ListenAnyIP (для Docker/клиентов)
