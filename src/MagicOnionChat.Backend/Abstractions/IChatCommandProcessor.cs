@@ -1,4 +1,3 @@
-using System;
 using MagicOnionChat.Contracts;
 
 namespace MagicOnionChat.Backend.Abstractions;
