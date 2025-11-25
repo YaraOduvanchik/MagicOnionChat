@@ -2,7 +2,7 @@
 
 namespace MagicOnionChat.Backend.BackgroundServices;
 
-public class ChatNotificationService(IChatCommandProcessor commandProcessor) : BackgroundService
+public class ChatNotificationService(IChatCommandService commandService) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -13,7 +13,7 @@ public class ChatNotificationService(IChatCommandProcessor commandProcessor) : B
         do
         {
             var message = $"Системное оповещение #{counter}";
-            commandProcessor.EnqueueSystemMessage(message);
+            commandService.EnqueueSystemMessage(message);
             counter++;
         } while (await timer.WaitForNextTickAsync(stoppingToken));
     }

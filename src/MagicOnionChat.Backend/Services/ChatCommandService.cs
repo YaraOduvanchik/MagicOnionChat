@@ -2,13 +2,13 @@ using MagicOnionChat.Backend.Abstractions;
 using MagicOnionChat.Backend.Core;
 using MagicOnionChat.Contracts;
 
-namespace MagicOnionChat.Backend.Processing;
+namespace MagicOnionChat.Backend.Services;
 
-public class ChatCommandProcessor : IChatCommandProcessor
+public class ChatCommandService : IChatCommandService
 {
     private readonly ChatContext _chatContext;
 
-    public ChatCommandProcessor(ChatContextFactory contextFactory)
+    public ChatCommandService(ChatContextFactory contextFactory)
     {
         _chatContext = contextFactory.CreateContext();
     }

@@ -2,7 +2,7 @@ using MagicOnionChat.Contracts;
 
 namespace MagicOnionChat.Backend.Abstractions;
 
-public interface IChatCommandProcessor
+public interface IChatCommandService
 {
     void RegisterClient(Guid connectionId, IChatReceiver receiver);
     void UnregisterClient(Guid connectionId);
