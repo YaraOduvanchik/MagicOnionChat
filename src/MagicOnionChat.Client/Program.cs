@@ -5,7 +5,7 @@ var ui = new ConsoleUI();
 await ui.PrintHeaderAsync();
 
 var serverUrl = $"http://localhost:{GetServerPort()}";
-var client = new ChatClient(serverUrl, ui);
+await using var client = new ChatClient(serverUrl, ui);
 
 try
 {

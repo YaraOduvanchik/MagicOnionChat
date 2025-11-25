@@ -4,7 +4,7 @@ using MagicOnionChat.Contracts;
 
 namespace MagicOnionChat.Client;
 
-public class ChatClient
+public class ChatClient : IAsyncDisposable
 {
     private readonly string _serverUrl;
     private readonly ConsoleUI _ui;
@@ -27,7 +27,8 @@ public class ChatClient
             _channel = CreateGrpcChannel();
             _hub = await ConnectToHubAsync();
             
-            UpdateConsoleTitle();
+            _ui.UpdateConsoleTitle(_userName);
+            
             await _ui.PrintWelcomeAsync(_userName);
             
             await _hub.JoinAsync(_userName);
@@ -36,10 +37,6 @@ public class ChatClient
         catch (Exception ex)
         {
            await _ui.PrintErrorAsync(ex.Message);
-        }
-        finally
-        {
-            await CleanupAsync();
         }
     }
 
@@ -63,11 +60,6 @@ public class ChatClient
         return await StreamingHubClient.ConnectAsync<IChatHub, IChatReceiver>(
             _channel!,
             new ChatClientReceiver(_ui));
-    }
-
-    private void UpdateConsoleTitle()
-    {
-        Console.Title = $"MagicOnion Chat - {_userName}";
     }
 
     private async ValueTask MessageLoopAsync()
@@ -104,7 +96,7 @@ public class ChatClient
         }
     }
 
-    private async ValueTask CleanupAsync()
+    public async ValueTask DisposeAsync()
     {
         if (_hub != null)
             await _hub.DisposeAsync();

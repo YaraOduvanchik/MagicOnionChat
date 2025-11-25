@@ -8,6 +8,11 @@ public class ConsoleUI
 
     private readonly SemaphoreSlim _consoleLock = new(1, 1);
 
+    public void UpdateConsoleTitle(string username)
+    {
+        Console.Title = $"MagicOnion Chat - {username}";
+    }
+
     public async ValueTask PrintHeaderAsync()
     {
         await _consoleLock.WaitAsync();
